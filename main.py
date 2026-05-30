@@ -57,10 +57,10 @@ class Game:
         
         self.pacman = Pacman()
         self.ghosts = [
-            Ghost(13, 14, RED),
-            Ghost(14, 14, PINK),
-            Ghost(13, 13, CYAN),
-            Ghost(14, 13, ORANGE),
+            Ghost(14, 11, RED),
+            Ghost(11, 11, PINK),
+            Ghost(14, 12, CYAN),
+            Ghost(11, 12, ORANGE),
         ]
         self.pellets = []
         self.power_pellets = []
