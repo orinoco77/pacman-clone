@@ -56,15 +56,28 @@ class Game:
         self.win = False
         
         self.pacman = Pacman()
-        self.ghosts = [
-            Ghost(14, 11, RED),
-            Ghost(11, 11, PINK),
-            Ghost(14, 12, CYAN),
-            Ghost(11, 12, ORANGE),
-        ]
+        self.ghosts = self.spawn_ghosts()
         self.pellets = []
         self.power_pellets = []
         self.setup_maze()
+
+    def spawn_ghosts(self):
+        colors = [RED, PINK, CYAN, ORANGE]
+        ghosts = []
+        # Find all empty/non-wall tiles for potential spawn points
+        empty_tiles = []
+        for r in range(len(MAZE)):
+            for c in range(len(MAZE[0])):
+                if MAZE[r][c] != 1:
+                    empty_tiles.append((r, c))
+        
+        # Randomly pick 4 distinct tiles for ghosts
+        spawn_points = random.sample(empty_tiles, 4)
+        for i in range(4):
+            r, c = spawn_points[i]
+            # Note: Ghost(c, r, color) because the class expects X(col) then Y(row)
+            ghosts.append(Ghost(c, r, colors[i]))
+        return ghosts
 
     def setup_maze(self):
         for r in range(len(MAZE)):
@@ -265,7 +278,16 @@ class Ghost:
         return True
 
     def reset(self):
-        self.x, self.y = 13 * TILE_SIZE, 13 * TILE_SIZE
+        # Find a random non-wall tile for reset instead of a hardcoded position
+        empty_tiles = []
+        for r in range(len(MAZE)):
+            for c in range(len(MAZE[0])):
+                if MAZE[r][c] != 1:
+                    empty_tiles.append((c, r)) # Store as (x, y) for consistency
+        
+        self.x, self.y = random.choice(empty_tiles)
+        self.x *= TILE_SIZE
+        self.y *= TILE_SIZE
         self.scared = False
 
     def draw(self, screen):
